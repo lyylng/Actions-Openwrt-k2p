@@ -23,8 +23,8 @@ on:
 #    types: started
 
 env:
-  REPO_URL: https://github.com/coolsnowwolf/lede
-  REPO_BRANCH: master
+  REPO_URL: https://github.com/openwrt/openwrt
+  REPO_BRANCH: openwrt-18.06
   FEEDS_CONF: feeds.conf.default
   CONFIG_FILE: .config
   DIY_P1_SH: diy-part1.sh
@@ -34,11 +34,11 @@ env:
   UPLOAD_FIRMWARE: true
   UPLOAD_COWTRANSFER: false
   UPLOAD_WETRANSFER: false
-  TZ: Asia/Shanghai
+  TZ: Asia/Tokyo
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-18.04
     if: github.event.repository.owner.id == github.event.sender.id
 
     steps:
@@ -73,6 +73,11 @@ jobs:
 
     - name: Install feeds
       run: cd openwrt && ./scripts/feeds install -a
+    
+    - name: Clone k2p wifi driver source code
+      run: |
+        git clone --depth 1 https://github.com/MeIsReallyBa/k2p-openwrt-mt7615_5.0.2.0 -b master k2p-openwrt-mt7615_5.0.2.0
+        mv -r k2p-openwrt-mt7615_5.0.2.0/mtk openwrt/pacagke
 
     - name: Load custom configuration
       run: |
